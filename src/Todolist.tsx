@@ -1,8 +1,11 @@
 import "./Todolist.css";
-import React from 'react'
+import Todo from "./todo";
+import React from 'react';
 
-const Todolist: React.FunctionComponent = () => {
-  return <div>Todolist</div>;
+export const Todolist: React.FC<any> = ({ todos, toggleTodo }) => {
+  return todos.map((todo: any) => (
+    <Todo todo={todo} toggleTodo={toggleTodo} key={todo.id} />
+  ));
 };
 
 export default Todolist
