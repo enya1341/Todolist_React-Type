@@ -1,5 +1,7 @@
-import Todolist from "./Todolist";
-import React, { useState, useRef } from "react";
+import Todolist from "./todolist";
+import APIList from "./apiList";
+import axios from "axios";
+import React, { useState, useRef, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 const App: React.FC = () => {
@@ -7,6 +9,10 @@ const App: React.FC = () => {
     id: number;
     name: string;
     completed: boolean;
+  }
+  interface apiObj {
+    count: number;
+    entries: Object[];
   }
   const [todos, setTodos] = useState<todoObj[]>([]);
   const todoNameRef = useRef<HTMLInputElement>(null);
@@ -37,16 +43,48 @@ const App: React.FC = () => {
     const newTodos = todos.filter((todo) => !todo.completed);
     setTodos(newTodos);
   };
+  const [apiDatas, setAPIDatas] = React.useState<apiObj[]>([]);
+  const baseURL: string = "https://api.publicapis.org/entries";
+  const [viewCompleted, setViewCompleted] = React.useState<boolean>(false);
+  useEffect(() => {
+    const getUser: any = async () => {
+      await axios
+        .get(baseURL)
+        .then((response) => {
+          setAPIDatas(response.data);
+        })
+        .catch(() => "test");
+    };
+    getUser();
+  }, []);
 
-  return (
-    <div>
-      <Todolist todos={todos} toggleTodo={toggleTodo} />
-      <input type="text" ref={todoNameRef} />
-      <button onClick={handleAddTodo}>タスクを追加</button>
-      <button onClick={handleClear}>選択したタスクを削除</button>
-      <div>残りのタスク:{todos.filter((todo) => !todo.completed).length}</div>
-    </div>
-  );
+  const viewAPI: React.FC = () => {
+    setViewCompleted(!viewCompleted);
+    console.log(viewCompleted);
+    console.log(apiDatas);
+    return null;
+  };
+  if (!viewCompleted) {
+    return (
+      <div>
+        <Todolist todos={todos} toggleTodo={toggleTodo} />
+        <input type="text" ref={todoNameRef} />
+        <button onClick={handleAddTodo}>タスクを追加</button>
+        <button onClick={handleClear}>選択したタスクを削除</button>
+        <div>残りのタスク:{todos.filter((todo) => !todo.completed).length}</div>
+        <div>APITable</div>
+        <button onClick={viewAPI}>APIを表示</button>
+      </div>
+    );
+  } else {
+      return (
+        <div>
+          <div>APITable</div>
+          <button onClick={viewAPI}>APIを表示</button>
+          <APIList apiDatas={apiDatas.entries}></APIList>
+        </div>
+      );
+  }
 };
 
 export default App;

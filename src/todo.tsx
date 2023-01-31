@@ -1,5 +1,5 @@
-import "./Todolist.css";
 import React from "react";
+import "./todolist.css";
 
 export const TodoBlock: React.FC<any> = ({ todo, toggleTodo }) => {
   const handleToggleTodo: React.FC = () => {

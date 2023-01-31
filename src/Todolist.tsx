@@ -1,5 +1,5 @@
-import "./Todolist.css";
 import Todo from "./todo";
+import "./todolist.css";
 import React from "react";
 
 interface todoObj {
