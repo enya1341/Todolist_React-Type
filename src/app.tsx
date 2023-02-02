@@ -52,6 +52,7 @@ const App: React.FC = () => {
         .get(baseURL)
         .then((response) => {
           setAPIDatas(response.data);
+          console.log("apiを取得")
         })
         .catch(() => "test");
     };
@@ -60,8 +61,7 @@ const App: React.FC = () => {
 
   const viewAPI: React.FC = () => {
     setViewCompleted(!viewCompleted);
-    console.log(viewCompleted);
-    console.log(apiDatas);
+    console.log("apiページを展開");
     return null;
   };
   if (!viewCompleted) {
@@ -80,8 +80,19 @@ const App: React.FC = () => {
       return (
         <div>
           <div>APITable</div>
-          <button onClick={viewAPI}>APIを表示</button>
-          <APIList apiDatas={apiDatas.entries}></APIList>
+          <button onClick={viewAPI}>タスクを表示</button>
+          <table>
+            <thead>
+              <tr>
+                <th>番号</th>
+                <th>タイトル</th>
+                <th>カテゴリー</th>
+                <th>概要</th>
+                <th>リンク</th>
+              </tr>
+            </thead>
+            <APIList apiDatas={apiDatas.entries}></APIList>
+          </table>
         </div>
       );
   }
