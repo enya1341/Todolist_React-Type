@@ -1,4 +1,4 @@
-import Todolist from "./todolist";
+import Todolist from "./Todolist";
 import APIList from "./apiList";
 import axios from "axios";
 import React, { useState, useRef, useEffect } from "react";
@@ -52,7 +52,7 @@ const App: React.FC = () => {
         .get(baseURL)
         .then((response) => {
           setAPIDatas(response.data);
-          console.log("apiを取得")
+          console.log("apiを取得");
         })
         .catch(() => "test");
     };
@@ -77,24 +77,24 @@ const App: React.FC = () => {
       </div>
     );
   } else {
-      return (
-        <div>
-          <div>APITable</div>
-          <button onClick={viewAPI}>タスクを表示</button>
-          <table>
-            <thead>
-              <tr>
-                <th>番号</th>
-                <th>タイトル</th>
-                <th>カテゴリー</th>
-                <th>概要</th>
-                <th>リンク</th>
-              </tr>
-            </thead>
-            <APIList apiDatas={apiDatas.entries}></APIList>
-          </table>
-        </div>
-      );
+    return (
+      <div>
+        <div>APITable</div>
+        <button onClick={viewAPI}>タスクを表示</button>
+        <table>
+          <thead>
+            <tr>
+              <th>番号</th>
+              <th>タイトル</th>
+              <th>カテゴリー</th>
+              <th>概要</th>
+              <th>リンク</th>
+            </tr>
+          </thead>
+          <APIList apiDatas={apiDatas.entries}></APIList>
+        </table>
+      </div>
+    );
   }
 };
 

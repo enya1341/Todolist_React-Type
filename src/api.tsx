@@ -1,13 +1,13 @@
-import "./todolist.css";
+import "./Todolist.css";
 import React from "react";
-  interface APIObj {
-    API: string;
-    Category: string;
-    Description: string;
-    Link: string;
-  }
-export const APIData: React.FC<any> = (APIData:any) => {
-  const API:APIObj = APIData.apiData
+interface APIObj {
+  API: string;
+  Category: string;
+  Description: string;
+  Link: string;
+}
+export const APIData: React.FC<any> = (APIData: any) => {
+  const API: APIObj = APIData.apiData;
   return (
     <tbody>
       <tr>
