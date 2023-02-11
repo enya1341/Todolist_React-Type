@@ -1,22 +1,31 @@
 import Todolist from "./Todolist";
-import APIList from "./apiList";
-import axios from "axios";
+import { APIBody } from "./APIBody";
+import axios, { AxiosResponse } from "axios";
 import React, { useState, useRef, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-const App: React.FC = () => {
-  interface todoObj {
-    id: number;
-    name: string;
-    completed: boolean;
-  }
-  interface apiObj {
-    count: number;
-    entries: Object[];
-  }
-  const [todos, setTodos] = useState<todoObj[]>([]);
+interface TodoObj {
+  id: number;
+  name: string;
+  completed: boolean;
+}
+
+export interface PublicAPIs {
+  count: number;
+  entries: PublicAPIEntry[];
+}
+
+export interface PublicAPIEntry {
+  API: string;
+  Category: string;
+  Description: string;
+  Link: string;
+}
+
+export const App: React.FC = () => {
+  const [todos, setTodos] = useState<TodoObj[]>([]);
   const todoNameRef = useRef<HTMLInputElement>(null);
-  const handleAddTodo: React.FC = () => {
+  const handleAddTodo: React.MouseEventHandler<HTMLButtonElement> = () => {
     if (todoNameRef.current !== null && todoNameRef.current.value !== "") {
       const todoName: string = todoNameRef.current.value;
       todoNameRef.current.value = "";
@@ -27,7 +36,6 @@ const App: React.FC = () => {
         ];
       });
     }
-    return <></>;
   };
 
   const toggleTodo: any = (id: number) => {
@@ -39,30 +47,35 @@ const App: React.FC = () => {
     setTodos(newTodos);
   };
 
-  const handleClear: any = () => {
+  const handleClear: React.MouseEventHandler<HTMLButtonElement> = () => {
     const newTodos = todos.filter((todo) => !todo.completed);
     setTodos(newTodos);
   };
-  const [apiDatas, setAPIDatas] = React.useState<apiObj[]>([]);
-  const baseURL: string = "https://api.publicapis.org/entries";
+  const [apiData, setAPIData] = useState<PublicAPIs>({
+    count: 0,
+    entries: [],
+  });
+  const baseURL = "https://api.publicapis.org/entries";
   const [viewCompleted, setViewCompleted] = React.useState<boolean>(false);
   useEffect(() => {
-    const getUser: any = async () => {
+    const getUser: () => Promise<void> = async () => {
       await axios
         .get(baseURL)
-        .then((response) => {
-          setAPIDatas(response.data);
-          console.log("apiを取得");
+        .then((response: AxiosResponse<PublicAPIs>) => {
+          const { data, status } = response;
+          if (status !== 200) {
+            return;
+          }
+          setAPIData(data);
         })
         .catch(() => "test");
     };
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     getUser();
   }, []);
 
-  const viewAPI: React.FC = () => {
+  const handleShowAPI: React.MouseEventHandler<HTMLButtonElement> = () => {
     setViewCompleted(!viewCompleted);
-    console.log("apiページを展開");
-    return null;
   };
   if (!viewCompleted) {
     return (
@@ -73,14 +86,14 @@ const App: React.FC = () => {
         <button onClick={handleClear}>選択したタスクを削除</button>
         <div>残りのタスク:{todos.filter((todo) => !todo.completed).length}</div>
         <div>APITable</div>
-        <button onClick={viewAPI}>APIを表示</button>
+        <button onClick={handleShowAPI}>APIを表示</button>
       </div>
     );
   } else {
     return (
       <div>
         <div>APITable</div>
-        <button onClick={viewAPI}>タスクを表示</button>
+        <button onClick={handleShowAPI}>タスクを表示</button>
         <table>
           <thead>
             <tr>
@@ -91,11 +104,9 @@ const App: React.FC = () => {
               <th>リンク</th>
             </tr>
           </thead>
-          <APIList apiDatas={apiDatas.entries}></APIList>
+          <APIBody data={apiData}></APIBody>
         </table>
       </div>
     );
   }
 };
-
-export default App;
