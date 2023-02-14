@@ -42,7 +42,9 @@ export const App: React.FC = () => {
     }
   };
 
-  const toggleTodo = (id: string) => {
+  const toggleTodo: (id: string) => void = (
+    id: string
+  ) => {
     const newTodos = [...todos];
     const todo = newTodos.find((todo) => todo.id === id);
     if (todo !== undefined) {

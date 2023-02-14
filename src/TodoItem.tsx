@@ -8,9 +8,8 @@ interface TodoProp {
 }
 
 export const TodoItem: React.FC<TodoProp> = ({ todo, toggleTodo }) => {
-  const handleToggleTodo: React.FC = () => {
+  const handleToggleTodo: React.ChangeEventHandler<HTMLInputElement> = () => {
     toggleTodo(todo.id);
-    return <></>;
   };
   return (
     <div>
