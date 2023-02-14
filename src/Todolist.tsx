@@ -1,17 +1,22 @@
-import Todo from "./todo";
+import { TodoItem } from "./TodoItem";
 import "./Todolist.css";
 import React from "react";
+import { TodoObj } from "./App";
 
-interface todoObj {
-  id: number;
-  name: string;
-  completed: boolean;
+interface TodoListProp {
+  todos: TodoObj[];
+  toggleTodo: (id: string) => void;
 }
 
-export const Todolist: React.FC<any> = ({ todos, toggleTodo }) => {
-  return todos.map((todo: todoObj) => (
-    <Todo todo={todo} toggleTodo={toggleTodo} key={todo.id} />
-  ));
+export const TodoList: React.FC<TodoListProp> = ({ todos, toggleTodo }) => {
+  const item = todos.map((todo: TodoObj) =>
+  {
+    if (todo.name !== "") {
+      return <TodoItem todo={todo} toggleTodo={toggleTodo} key={todo.id} />;
+    } else {
+      return null
+    }
+  }
+  );
+  return <div>{item}</div>;
 };
-
-export default Todolist;

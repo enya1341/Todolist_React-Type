@@ -1,11 +1,11 @@
-import Todolist from "./Todolist";
+import { TodoList } from "./Todolist";
 import { APIBody } from "./APIBody";
 import axios, { AxiosResponse } from "axios";
 import React, { useState, useRef, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-interface TodoObj {
-  id: number;
+export interface TodoObj {
+  id: string;
   name: string;
   completed: boolean;
 }
@@ -23,22 +23,26 @@ export interface PublicAPIEntry {
 }
 
 export const App: React.FC = () => {
-  const [todos, setTodos] = useState<TodoObj[]>([]);
+  const [todos, setTodos] = useState<TodoObj[]>([{
+    id: "",
+    name: "",
+    completed:true
+  }]);
   const todoNameRef = useRef<HTMLInputElement>(null);
   const handleAddTodo: React.MouseEventHandler<HTMLButtonElement> = () => {
     if (todoNameRef.current !== null && todoNameRef.current.value !== "") {
       const todoName: string = todoNameRef.current.value;
       todoNameRef.current.value = "";
-      setTodos((prevTodos: any) => {
+      setTodos((prevTodos: TodoObj[]) => {
         return [
           ...prevTodos,
-          { id: uuidv4(), name: todoName, completed: false },
+          { id: uuidv4(), name: todoName, completed: false }
         ];
       });
     }
   };
 
-  const toggleTodo: any = (id: number) => {
+  const toggleTodo = (id: string) => {
     const newTodos = [...todos];
     const todo = newTodos.find((todo) => todo.id === id);
     if (todo !== undefined) {
@@ -80,7 +84,7 @@ export const App: React.FC = () => {
   if (!viewCompleted) {
     return (
       <div>
-        <Todolist todos={todos} toggleTodo={toggleTodo} />
+        <TodoList todos={todos} toggleTodo={toggleTodo} />
         <input type="text" ref={todoNameRef} />
         <button onClick={handleAddTodo}>タスクを追加</button>
         <button onClick={handleClear}>選択したタスクを削除</button>

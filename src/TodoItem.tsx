@@ -1,12 +1,17 @@
 import React from "react";
 import "./Todolist.css";
+import { TodoObj } from "./App";
 
-export const TodoBlock: React.FC<any> = ({ todo, toggleTodo }) => {
+interface TodoProp {
+  todo: TodoObj;
+  toggleTodo: (id: string) => void;
+}
+
+export const TodoItem: React.FC<TodoProp> = ({ todo, toggleTodo }) => {
   const handleToggleTodo: React.FC = () => {
     toggleTodo(todo.id);
     return <></>;
   };
-
   return (
     <div>
       <label>
@@ -21,5 +26,3 @@ export const TodoBlock: React.FC<any> = ({ todo, toggleTodo }) => {
     </div>
   );
 };
-
-export default TodoBlock;
