@@ -1,5 +1,5 @@
 import { TodoItem } from "./TodoItem";
-import "./Todolist.css";
+import "./index.css";
 import React from "react";
 import { TodoObj } from "./App";
 
@@ -9,14 +9,12 @@ interface TodoListProp {
 }
 
 export const TodoList: React.FC<TodoListProp> = ({ todos, toggleTodo }) => {
-  const item = todos.map((todo: TodoObj) =>
-  {
+  const item = todos.map((todo: TodoObj) => {
     if (todo.name !== "") {
       return <TodoItem todo={todo} toggleTodo={toggleTodo} key={todo.id} />;
     } else {
-      return null
+      return null;
     }
-  }
-  );
+  });
   return <div>{item}</div>;
 };

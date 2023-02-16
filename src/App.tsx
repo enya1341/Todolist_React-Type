@@ -1,4 +1,5 @@
-import { TodoList } from "./Todolist";
+import "./index.css";
+import { TodoList } from "./TodoList";
 import { APIBody } from "./APIBody";
 import axios, { AxiosResponse } from "axios";
 import React, { useState, useRef, useEffect } from "react";
@@ -23,46 +24,50 @@ export interface PublicAPIEntry {
 }
 
 export const App: React.FC = () => {
-  const [todos, setTodos] = useState<TodoObj[]>([{
-    id: "",
-    name: "",
-    completed:true
-  }]);
-  const todoNameRef = useRef<HTMLInputElement>(null);
+  const [useTodos, setUseTodos] = useState<TodoObj[]>([
+    {
+      id: "",
+      name: "",
+      completed: true,
+    },
+  ]);
+  const useTodoNameRef = useRef<HTMLInputElement>(null);
   const handleAddTodo: React.MouseEventHandler<HTMLButtonElement> = () => {
-    if (todoNameRef.current !== null && todoNameRef.current.value !== "") {
-      const todoName: string = todoNameRef.current.value;
-      todoNameRef.current.value = "";
-      setTodos((prevTodos: TodoObj[]) => {
+    if (
+      useTodoNameRef.current !== null &&
+      useTodoNameRef.current.value !== ""
+    ) {
+      const todoName: string = useTodoNameRef.current.value;
+      useTodoNameRef.current.value = "";
+      setUseTodos((prevTodos: TodoObj[]) => {
         return [
           ...prevTodos,
-          { id: uuidv4(), name: todoName, completed: false }
+          { id: uuidv4(), name: todoName, completed: false },
         ];
       });
     }
   };
 
-  const toggleTodo: (id: string) => void = (
-    id: string
-  ) => {
-    const newTodos = [...todos];
+  const toggleTodo: (id: string) => void = (id: string) => {
+    const newTodos = [...useTodos];
     const todo = newTodos.find((todo) => todo.id === id);
     if (todo !== undefined) {
       todo.completed = !todo.completed;
     }
-    setTodos(newTodos);
+    setUseTodos(newTodos);
   };
 
   const handleClear: React.MouseEventHandler<HTMLButtonElement> = () => {
-    const newTodos = todos.filter((todo) => !todo.completed);
-    setTodos(newTodos);
+    const newTodos = useTodos.filter((todo) => !todo.completed);
+    setUseTodos(newTodos);
   };
-  const [apiData, setAPIData] = useState<PublicAPIs>({
+  const [usePublicAPIData, setUsePublicAPIData] = useState<PublicAPIs>({
     count: 0,
     entries: [],
   });
   const baseURL = "https://api.publicapis.org/entries";
-  const [viewCompleted, setViewCompleted] = React.useState<boolean>(false);
+  const [useSwitchPageBody, setUseSwitchPageBody] =
+    React.useState<boolean>(false);
   useEffect(() => {
     const getUser: () => Promise<void> = async () => {
       await axios
@@ -72,7 +77,7 @@ export const App: React.FC = () => {
           if (status !== 200) {
             return;
           }
-          setAPIData(data);
+          setUsePublicAPIData(data);
         })
         .catch(() => "test");
     };
@@ -81,16 +86,18 @@ export const App: React.FC = () => {
   }, []);
 
   const handleShowAPI: React.MouseEventHandler<HTMLButtonElement> = () => {
-    setViewCompleted(!viewCompleted);
+    setUseSwitchPageBody(!useSwitchPageBody);
   };
-  if (!viewCompleted) {
+  if (!useSwitchPageBody) {
     return (
       <div>
-        <TodoList todos={todos} toggleTodo={toggleTodo} />
-        <input type="text" ref={todoNameRef} />
+        <TodoList todos={useTodos} toggleTodo={toggleTodo} />
+        <input type="text" ref={useTodoNameRef} />
         <button onClick={handleAddTodo}>タスクを追加</button>
         <button onClick={handleClear}>選択したタスクを削除</button>
-        <div>残りのタスク:{todos.filter((todo) => !todo.completed).length}</div>
+        <div>
+          残りのタスク:{useTodos.filter((todo) => !todo.completed).length}
+        </div>
         <div>APITable</div>
         <button onClick={handleShowAPI}>APIを表示</button>
       </div>
@@ -110,7 +117,7 @@ export const App: React.FC = () => {
               <th>リンク</th>
             </tr>
           </thead>
-          <APIBody data={apiData}></APIBody>
+          <APIBody data={usePublicAPIData}></APIBody>
         </table>
       </div>
     );

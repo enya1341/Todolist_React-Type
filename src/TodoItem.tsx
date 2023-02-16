@@ -1,5 +1,5 @@
 import React from "react";
-import "./Todolist.css";
+import "./index.css";
 import { TodoObj } from "./App";
 
 interface TodoProp {
